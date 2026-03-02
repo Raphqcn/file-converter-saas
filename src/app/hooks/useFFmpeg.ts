@@ -34,20 +34,30 @@ export function useFFmpeg() {
         //Generate the output file name by replacing the original file ext to the output desired format
         const outputFileName = `converted_${inputFileName.substring(0, inputFileName.lastIndexOf('.'))}.${outputFormat}`;
 
-        //Write the given file to the ffmpeg virtual fs
-        await ffmpeg.writeFile(inputFileName, await fetchFile(file));
+        try {
+            //Write the given file to the ffmpeg virtual fs
+            await ffmpeg.writeFile(inputFileName, await fetchFile(file));
 
-        //Exec ffmpeg command to convert the file
-        await ffmpeg.exec(["-i", inputFileName, outputFileName]);
+            //Exec ffmpeg command to convert the file
+            await ffmpeg.exec(["-i", inputFileName, outputFileName]);
 
-        //Read the converted file from the ffmpeg virtual fs
-        const data = await ffmpeg.readFile(outputFileName);
+            //Read the converted file from the ffmpeg virtual fs
+            const data = await ffmpeg.readFile(outputFileName);
 
-        //Create a Blob from the converted file data and generate a URL for it
-        const blob = new Blob([new Uint8Array(data as ArrayLike<number>)]);
-        const url = URL.createObjectURL(blob);
+            //Create a Blob from the converted file data and generate a URL for it
+            const blob = new Blob([new Uint8Array(data as ArrayLike<number>)]);
+            const url = URL.createObjectURL(blob);
 
-        return { url, name: outputFileName };
+            //Clean up the ffmpeg virtual fs by deleting the input and output files
+            await ffmpeg.deleteFile(inputFileName);
+            await ffmpeg.deleteFile(outputFileName);
+
+            return { url, name: outputFileName };
+        }
+        catch (error) {
+            console.log(`Error converting file ${inputFileName} to ${outputFormat} (${error})`)
+            return { error: true, failedFile: inputFileName};
+        }
     };
 
     return { isLoaded, loadFFmpeg, convertFile };
