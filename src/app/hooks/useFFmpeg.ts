@@ -55,8 +55,8 @@ export function useFFmpeg() {
             return { url, name: outputFileName };
         }
         catch (error) {
-            console.log(`Error converting file ${inputFileName} to ${outputFormat} (${error})`)
-            return { error: true, failedFile: inputFileName};
+            console.error(`Error converting file ${inputFileName} to ${outputFormat}`, error);
+            throw error;
         }
     };
 
