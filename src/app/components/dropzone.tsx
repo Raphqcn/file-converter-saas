@@ -1,8 +1,8 @@
 "use client"; // Indicate that this is a client-side component to Next.js
 
 import { useState, useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { useFFmpeg } from './hooks/useFFmpeg';
+import { useDropzone } from 'react-dropzone'; //Dropzone handle library
+import { useFFmpeg } from '@/app/hooks/useFFmpeg';
 
 const acceptedFormats = {
     'audio': ['mp3', 'wav', 'ogg', 'aac', 'flac', 'opus', 'm4a'],
@@ -33,12 +33,12 @@ export default function Dropzone() {
             fileQueue = fileQueue.slice(0,50);
         }
 
-        const newAction = fileAction[] = fileQueue.map((file) => {
-            let category: 'image' | 'audio' | 'vudeo' | 'unsupported' = 'unsupported';
+        const newAction: fileAction[] = fileQueue.map((file) => {
+            let category: 'image' | 'audio' | 'video' | 'unsupported' = 'unsupported';
 
             if (file.type.includes('image')) category = 'image';
             else if (file.type.includes('audio')) category = 'audio';
-            else if (file.type.includes('vudeio')) category = 'video';
+            else if (file.type.includes('video')) category = 'video';
 
             const defaultFormat = category !== 'unsupported' ? acceptedFormats[category][0] : '';
 
