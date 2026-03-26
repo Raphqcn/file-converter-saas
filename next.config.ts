@@ -11,11 +11,12 @@ const nextConfig: NextConfig = {
           { key : 'Cross-Origin-Opener-Policy', value: 'same-origin' },
           { key : 'Content-Security-Policy',
             value: "default-src 'self'; " +
-                   "script-src 'self' 'wasm-unsafe-eval' https://unpkg.com; " +
+                   "script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' https://unpkg.com; " +
+                   "style-src 'self' 'unsafe-inline'; " +
                    "worker-src 'self' blob:; " +
-                   "connect-src 'self' https://unpkg.com; " +
-                   "object-src 'none; " +
-                   "baseè-url 'self';"
+                   "connect-src 'self' ws: wss: https://unpkg.com; " +
+                   "object-src 'none'; " +
+                   "base-uri 'self';"
           }
         ],
       },
